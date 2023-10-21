@@ -32,7 +32,27 @@ public class ChatBot {
             System.out.println(i + " !");
         }
 
+        System.out.println("Let`s test your programming knowledge");
+        System.out.println("What does the 'System.out.println()' method do in Java?");
+        System.out.println("1. Reads user input");
+        System.out.println("2. Prints text to the console");
+        System.out.println("3. Performs a mathematical calculation");
+        System.out.println("4. Creates a new object");
 
+        int correctAnswer = 2;
+        int userAnswer;
 
+        do {
+            System.out.println("Enter the number of your answer:");
+            userAnswer = scanner.nextInt();
+
+            if (userAnswer == correctAnswer) {
+                System.out.println("Congratulations, you`re right!");
+            } else  {
+                System.out.println("Sorry, your answer is incorrect. Try again.");
+            }
+        } while (userAnswer != correctAnswer);
+
+        System.out.println("Goodbye, have a nice day!");
     }
 }
