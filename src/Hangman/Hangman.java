@@ -15,6 +15,10 @@ public class Hangman {
 
         System.out.println(randomLanguage);
 
+        String substring = randomLanguage.substring(0,2);
+        String maskedPart = "-".repeat(randomLanguage.length() - 2);
+
+        System.out.println(substring + maskedPart);
 
         System.out.println("HANGMAN");
         System.out.print("Guess the word:>");
