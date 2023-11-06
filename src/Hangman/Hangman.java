@@ -1,10 +1,20 @@
 package Hangman;
 import java.util.Scanner;
+import java.util.List;
+import java.util.Random;
 
 public class Hangman {
     public static void main(String[] args) {
 
-        String correctAnswer = "python";
+        List<String> list = List.of("python","java","javascript","kotlin");
+
+        Random random = new Random();
+        int randomIndex = random.nextInt(list.size());
+
+        String randomLanguage = list.get(randomIndex);
+
+        System.out.println(randomLanguage);
+
 
         System.out.println("HANGMAN");
         System.out.print("Guess the word:>");
@@ -12,7 +22,7 @@ public class Hangman {
 
         String userAnswer = scanner.nextLine();
 
-        if (userAnswer.equals(correctAnswer)) {
+        if (userAnswer.equals(randomLanguage)) {
             System.out.println("You survived!");
         } else {
             System.out.println("You lost!");
