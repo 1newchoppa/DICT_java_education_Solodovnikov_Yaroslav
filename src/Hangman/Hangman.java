@@ -23,12 +23,13 @@ public class Hangman {
         Scanner scanner = new Scanner(System.in);
 
         while (tries > 0) {
+            System.out.println(tries);
             System.out.println(maskedWord);
             System.out.print("Guess the word:>");
             char userGuess = scanner.nextLine().charAt(0);
 
             if (guessedLetters.toString().contains(String.valueOf(userGuess))) {
-                System.out.println("You've already guessed this letter. Try another one.");
+                System.out.println("No improvements");
                 continue;
             }
 
