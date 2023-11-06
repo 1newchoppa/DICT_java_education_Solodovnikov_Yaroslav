@@ -6,33 +6,61 @@ import java.util.Random;
 public class Hangman {
     public static void main(String[] args) {
 
-        List<String> list = List.of("python","java","javascript","kotlin");
+        int tries = 8;
+
+        List<String> list = List.of("python", "java", "javascript", "kotlin");
 
         Random random = new Random();
         int randomIndex = random.nextInt(list.size());
 
         String randomLanguage = list.get(randomIndex);
 
-        System.out.println(randomLanguage);
+        String maskedWord = "-".repeat(randomLanguage.length());
 
-        String substring = randomLanguage.substring(0,2);
-        String maskedPart = "-".repeat(randomLanguage.length() - 2);
+        StringBuilder guessedLetters = new StringBuilder();
 
-        System.out.println(substring + maskedPart);
 
-        System.out.println("HANGMAN");
-        System.out.print("Guess the word:>");
         Scanner scanner = new Scanner(System.in);
 
-        String userAnswer = scanner.nextLine();
+        while (tries > 0) {
+            System.out.println(maskedWord);
+            System.out.print("Guess the word:>");
+            char userGuess = scanner.nextLine().charAt(0);
 
-        if (userAnswer.equals(randomLanguage)) {
-            System.out.println("You survived!");
-        } else {
-            System.out.println("You lost!");
+            if (guessedLetters.toString().contains(String.valueOf(userGuess))) {
+                System.out.println("You've already guessed this letter. Try another one.");
+                continue;
+            }
+
+            guessedLetters.append(userGuess);
+
+            if (randomLanguage.contains(String.valueOf(userGuess))) {
+                StringBuilder newMaskedWord = new StringBuilder(maskedWord);
+                for (int i = 0; i < randomLanguage.length(); i++) {
+                    if (randomLanguage.charAt(i) == userGuess) {
+                        newMaskedWord.setCharAt(i, userGuess);
+                    }
+                }
+                maskedWord = newMaskedWord.toString();
+            } else {
+                tries--;
+                System.out.println("That letter doesnt appear in the word");
+            }
+
+            if (!maskedWord.contains("-")) {
+                System.out.println("Thanks for playing!\n" +
+                        "Well see how well you did in the next stage");
+                break;
+            }
+        }
+
+        if (tries == 0) {
+            System.out.println("Thanks for playing!\n" +
+                    "Well see how well you did in the next stage");
         }
     }
 }
+
 
 
 
