@@ -22,14 +22,29 @@ public class Hangman {
 
         Scanner scanner = new Scanner(System.in);
 
+        char userGuess;
+
         while (tries > 0) {
             System.out.println(tries);
             System.out.println(maskedWord);
             System.out.print("Guess the word:>");
-            char userGuess = scanner.nextLine().charAt(0);
+            String input = scanner.next();
+
+            if (input.length() != 1) {
+                System.out.println("You should input a single letter.");
+                continue;
+            }
+
+
+            userGuess = input.charAt(0);
+
+            if (!Character.isLowerCase(userGuess)){
+                System.out.println("Please enter a lowercase English letter.");
+                continue;
+            }
 
             if (guessedLetters.toString().contains(String.valueOf(userGuess))) {
-                System.out.println("No improvements");
+                System.out.println("You`ve already guessed this letter.");
                 continue;
             }
 
@@ -45,8 +60,9 @@ public class Hangman {
                 maskedWord = newMaskedWord.toString();
             } else {
                 tries--;
-                System.out.println("That letter doesnt appear in the word");
+                System.out.println("That letter doesnt appear in the word.");
             }
+
 
             if (!maskedWord.contains("-")) {
                 System.out.println("Thanks for playing!\n" +
