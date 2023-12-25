@@ -3,79 +3,136 @@ package MatrixProcessing;
 import java.util.Scanner;
 
 public class MatrixProcessing {
-    public int[][] readMatrix() {
+
+    public static Number[][] readMatrix(String matrixName) {
         Scanner scanner = new Scanner(System.in);
 
+        System.out.println("Enter the number of rows and columns for matrix " + matrixName + ":");
         int rows = scanner.nextInt();
         int cols = scanner.nextInt();
 
-        int[][] matrix = new int[rows][cols];
+        System.out.println("Enter matrix " + matrixName + ":");
+        Number[][] matrix = new Number[rows][cols];
 
+        scanner.nextLine();
         for (int i = 0; i < rows; i++) {
+            System.out.println("Enter row " + (i + 1) + " for matrix " + matrixName + ":");
+            String[] values = scanner.nextLine().split("\\s+");
             for (int j = 0; j < cols; j++) {
-                matrix[i][j] = scanner.nextInt();
+                if (values[j].contains(".")) {
+                    matrix[i][j] = Double.parseDouble(values[j].replace(',', '.'));
+                } else {
+                    matrix[i][j] = Integer.parseInt(values[j]);
+                }
             }
         }
 
         return matrix;
     }
 
-    public int[][] addMatrices(int[][] matrixA, int[][] matrixB) {
-        int rowsA = matrixA.length;
-        int colsA = matrixA[0].length;
-        int rowsB = matrixB.length;
-        int colsB = matrixB[0].length;
-
-        if (rowsA != rowsB || colsA != colsB) {
-            System.out.println("ERROR");
-            return null;
-        }
-
-        int[][] result = new int[rowsA][colsA];
-
-        for (int i = 0; i < rowsA; i++) {
-            for (int j = 0; j < colsA; j++) {
-                result[i][j] = matrixA[i][j] + matrixB[i][j];
+    public static Number[][] multiplyByConstant(Number[][] matrix, Number constant) {
+        Number[][] result = new Number[matrix.length][matrix[0].length];
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[0].length; j++) {
+                if (matrix[i][j] instanceof Double) {
+                    result[i][j] = (double) matrix[i][j] * constant.doubleValue();
+                } else {
+                    result[i][j] = (int) matrix[i][j] * constant.intValue();
+                }
             }
         }
-
         return result;
     }
 
-    public int[][] multiplyByConstant(int[][] matrix, int constant) {
-        int rows = matrix.length;
-        int cols = matrix[0].length;
-
-        int[][] result = new int[rows][cols];
-
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
-                result[i][j] = matrix[i][j] * constant;
-            }
-        }
-
-        return result;
-    }
-
-    public static void main(String[] args) {
-        MatrixProcessing matrixProcessing = new MatrixProcessing();
-        Scanner scanner = new Scanner(System.in);
-
-        System.out.println("Enter matrix:");
-        int[][] matrix = matrixProcessing.readMatrix();
-
-        System.out.println("Enter constant:");
-        int constant = scanner.nextInt();
-
-        int[][] multipliedMatrix = matrixProcessing.multiplyByConstant(matrix, constant);
-
-        System.out.println("Result:");
-        for (int[] row : multipliedMatrix) {
-            for (int value : row) {
-                System.out.print(value + " ");
+    public static void printMatrix(Number[][] matrix) {
+        for (Number[] row : matrix) {
+            for (Number element : row) {
+                System.out.print(element + " ");
             }
             System.out.println();
         }
     }
 
+    public static Number[][] multiplyMatrices(Number[][] matrixA, Number[][] matrixB) {
+        if (matrixA[0].length != matrixB.length) {
+            return null;
+        }
+
+        Number[][] result = new Number[matrixA.length][matrixB[0].length];
+        for (int i = 0; i < matrixA.length; i++) {
+            for (int j = 0; j < matrixB[0].length; j++) {
+                result[i][j] = 0;
+                for (int k = 0; k < matrixA[0].length; k++) {
+                    if (matrixA[i][k] instanceof Double || matrixB[k][j] instanceof Double) {
+                        result[i][j] = result[i][j].doubleValue() +
+                                matrixA[i][k].doubleValue() * matrixB[k][j].doubleValue();
+                    } else {
+                        result[i][j] = result[i][j].intValue() +
+                                matrixA[i][k].intValue() * matrixB[k][j].intValue();
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        int choice;
+        do {
+            System.out.println("1. Add matrices\n2. Multiply matrix by a constant\n3. Multiply matrices\n0. Exit");
+            System.out.print("Your choice: > ");
+            choice = scanner.nextInt();
+
+            switch (choice) {
+                case 1:
+                    Number[][] matrixA = readMatrix("A");
+                    Number[][] matrixB = readMatrix("B");
+                    if (matrixA.length == matrixB.length && matrixA[0].length == matrixB[0].length) {
+                        Number[][] sum = new Number[matrixA.length][matrixA[0].length];
+                        for (int i = 0; i < matrixA.length; i++) {
+                            for (int j = 0; j < matrixA[0].length; j++) {
+                                if (matrixA[i][j] instanceof Double || matrixB[i][j] instanceof Double) {
+                                    sum[i][j] = (double) matrixA[i][j] + (double) matrixB[i][j];
+                                } else {
+                                    sum[i][j] = (int) matrixA[i][j] + (int) matrixB[i][j];
+                                }
+                            }
+                        }
+                        System.out.println("The result is:");
+                        printMatrix(sum);
+                    } else {
+                        System.out.println("Matrices cannot be added.");
+                    }
+                    break;
+
+                case 2:
+                    Number[][] matrix = readMatrix("");
+                    System.out.print("Enter constant: > ");
+                    Number constant;
+                    if (scanner.hasNextInt()) {
+                        constant = scanner.nextInt();
+                    } else {
+                        constant = scanner.nextDouble();
+                    }
+                    Number[][] result = multiplyByConstant(matrix, constant);
+                    System.out.println("The result is:");
+                    printMatrix(result);
+                    break;
+
+                case 3:
+                    Number[][] matrix1 = readMatrix("A");
+                    Number[][] matrix2 = readMatrix("B");
+                    Number[][] product = multiplyMatrices(matrix1, matrix2);
+                    if (product == null) {
+                        System.out.println("Matrices cannot be multiplied.");
+                    } else {
+                        System.out.println("The result is:");
+                        printMatrix(product);
+                    }
+                    break;
+            }
+        } while (choice != 0);
+    }
 }
