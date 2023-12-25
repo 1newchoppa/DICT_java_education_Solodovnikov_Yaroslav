@@ -76,12 +76,57 @@ public class MatrixProcessing {
         return result;
     }
 
+    public static Number[][] transposeMatrix(Number[][] inputMatrix, int choice) {
+        int rows = inputMatrix.length;
+        int cols = inputMatrix[0].length;
+        Number[][] result = new Number[cols][rows];
+
+        switch (choice) {
+            case 1:
+                for (int i = 0; i < cols; i++) {
+                    for (int j = 0; j < rows; j++) {
+                        result[i][j] = inputMatrix[j][i];
+                    }
+                }
+                break;
+            case 2:
+                for (int i = 0; i < cols; i++) {
+                    for (int j = 0; j < rows; j++) {
+                        result[i][j] = inputMatrix[rows - j - 1][cols - i - 1];
+                    }
+                }
+                break;
+            case 3:
+                for (int i = 0; i < cols; i++) {
+                    for (int j = 0; j < rows; j++) {
+                        result[i][j] = inputMatrix[i][rows - j - 1];
+                    }
+                }
+                break;
+            case 4:
+                for (int i = 0; i < cols; i++) {
+                    for (int j = 0; j < rows; j++) {
+                        result[i][j] = inputMatrix[cols - i - 1][j];
+                    }
+                }
+                break;
+            default:
+                System.out.println("Invalid choice.");
+                break;
+        }
+
+        return result;
+    }
+
+
+
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
         int choice;
         do {
-            System.out.println("1. Add matrices\n2. Multiply matrix by a constant\n3. Multiply matrices\n0. Exit");
+            System.out.println("1. Add matrices\n2. Multiply matrix by a constant\n3. Multiply matrices\n4. Transpose matrix\n0. Exit");
             System.out.print("Your choice: > ");
             choice = scanner.nextInt();
 
@@ -132,6 +177,19 @@ public class MatrixProcessing {
                         printMatrix(product);
                     }
                     break;
+
+                case 4:
+                    System.out.println("1. Main diagonal\n2. Side diagonal\n3. Vertical line\n4. Horizontal line");
+                    System.out.print("Your choice: > ");
+                    int transposeChoice = scanner.nextInt();
+                    Number[][] inputMatrix = readMatrix("");
+                    Number[][] transposedMatrix = transposeMatrix(inputMatrix, transposeChoice);
+                    System.out.println("The result is:");
+                    printMatrix(transposedMatrix);
+                    break;
+
+
+
             }
         } while (choice != 0);
     }
