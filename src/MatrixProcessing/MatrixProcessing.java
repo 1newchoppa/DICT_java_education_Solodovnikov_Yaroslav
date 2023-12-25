@@ -118,6 +118,38 @@ public class MatrixProcessing {
         return result;
     }
 
+    public static long calculateDeterminant(Number[][] determinantMatrix) {
+        int rows = determinantMatrix.length;
+        int cols = determinantMatrix[0].length;
+
+        if (rows != cols) {
+            return Long.MIN_VALUE;
+        }
+
+        if (rows == 1) {
+            return determinantMatrix[0][0].longValue();
+        }
+
+        if (rows == 2) {
+            return determinantMatrix[0][0].longValue() * determinantMatrix[1][1].longValue() -
+                    determinantMatrix[0][1].longValue() * determinantMatrix[1][0].longValue();
+        }
+
+        long determinant = 0;
+        for (int i = 0; i < cols; i++) {
+            Number[][] subMatrix = new Number[rows - 1][cols - 1];
+            for (int j = 1; j < rows; j++) {
+                for (int k = 0, l = 0; k < cols; k++) {
+                    if (k == i) {
+                        continue;
+                    }
+                    subMatrix[j - 1][l++] = determinantMatrix[j][k];
+                }
+            }
+            determinant += Math.pow(-1, i) * determinantMatrix[0][i].longValue() * calculateDeterminant(subMatrix);
+        }
+        return determinant;
+    }
 
 
 
@@ -126,7 +158,7 @@ public class MatrixProcessing {
 
         int choice;
         do {
-            System.out.println("1. Add matrices\n2. Multiply matrix by a constant\n3. Multiply matrices\n4. Transpose matrix\n0. Exit");
+            System.out.println("1. Add matrices\n2. Multiply matrix by a constant\n3. Multiply matrices\n4. Transpose matrix\n5. Calculate a determinant\n0. Exit");
             System.out.print("Your choice: > ");
             choice = scanner.nextInt();
 
@@ -188,6 +220,12 @@ public class MatrixProcessing {
                     printMatrix(transposedMatrix);
                     break;
 
+                case 5:
+                    Number[][] determinantMatrix = readMatrix("");
+                    double determinant = calculateDeterminant(determinantMatrix);
+                    System.out.println("The result is:");
+                    System.out.println(determinant);
+                    break;
 
 
             }
