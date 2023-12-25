@@ -42,25 +42,40 @@ public class MatrixProcessing {
         return result;
     }
 
-    public static void main(String[] args) {
-        MatrixProcessing matrixProcessing = new MatrixProcessing();
+    public int[][] multiplyByConstant(int[][] matrix, int constant) {
+        int rows = matrix.length;
+        int cols = matrix[0].length;
 
-        System.out.println("Enter matrix A:");
-        int[][] matrixA = matrixProcessing.readMatrix();
+        int[][] result = new int[rows][cols];
 
-        System.out.println("Enter matrix B:");
-        int[][] matrixB = matrixProcessing.readMatrix();
-
-        System.out.println("Matrix sum:");
-        int[][] sum = matrixProcessing.addMatrices(matrixA, matrixB);
-
-        if (sum != null) {
-            for (int[] row : sum) {
-                for (int value : row) {
-                    System.out.print(value + " ");
-                }
-                System.out.println();
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result[i][j] = matrix[i][j] * constant;
             }
         }
+
+        return result;
     }
+
+    public static void main(String[] args) {
+        MatrixProcessing matrixProcessing = new MatrixProcessing();
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Enter matrix:");
+        int[][] matrix = matrixProcessing.readMatrix();
+
+        System.out.println("Enter constant:");
+        int constant = scanner.nextInt();
+
+        int[][] multipliedMatrix = matrixProcessing.multiplyByConstant(matrix, constant);
+
+        System.out.println("Result:");
+        for (int[] row : multipliedMatrix) {
+            for (int value : row) {
+                System.out.print(value + " ");
+            }
+            System.out.println();
+        }
+    }
+
 }
