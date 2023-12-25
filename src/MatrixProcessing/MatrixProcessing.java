@@ -151,14 +151,105 @@ public class MatrixProcessing {
         return determinant;
     }
 
+    public static Number[][] calculateAdjointMatrix(Number[][] matrix) {
+        int rows = matrix.length;
+        int cols = matrix[0].length;
 
+        if (rows != cols) {
+            return null;
+        }
+
+        Number[][] adjoint = new Number[rows][cols];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                Number[][] subMatrix = new Number[rows - 1][cols - 1];
+                int subRow = 0, subCol = 0;
+                for (int k = 0; k < rows; k++) {
+                    if (k == i) {
+                        continue;
+                    }
+                    subCol = 0;
+                    for (int l = 0; l < cols; l++) {
+                        if (l != j) {
+                            subMatrix[subRow][subCol] = matrix[k][l];
+                            subCol++;
+                        }
+                    }
+                    subRow++;
+                }
+                long determinant = calculateDeterminant(subMatrix);
+                adjoint[i][j] = (i + j) % 2 == 0 ? determinant : -determinant;
+            }
+        }
+
+        return transposeMatrix(adjoint, 1);
+    }
+
+    public static Number[][] inverseMatrix(Number[][] inversedMatrix) {
+        int rows = inversedMatrix.length;
+        int cols = inversedMatrix[0].length;
+
+        if (rows != cols) {
+            System.out.println("This matrix is not square. Inverse matrix cannot be found.");
+            return null;
+        }
+
+        long determinant = calculateDeterminant(inversedMatrix);
+        if (determinant == 0) {
+            System.out.println("This matrix doesn't have an inverse.");
+            return null;
+        }
+
+        Number[][] extendedMatrix = new Number[rows][cols * 2];
+        for (int i = 0; i < rows; i++) {
+            System.arraycopy(inversedMatrix[i], 0, extendedMatrix[i], 0, cols);
+            for (int j = cols; j < cols * 2; j++) {
+                if (j - cols == i) {
+                    extendedMatrix[i][j] = 1;
+                } else {
+                    extendedMatrix[i][j] = 0;
+                }
+            }
+        }
+
+        for (int i = 0; i < rows; i++) {
+            Number pivot = extendedMatrix[i][i];
+            for (int j = 0; j < cols * 2; j++) {
+                extendedMatrix[i][j] = extendedMatrix[i][j].doubleValue() / pivot.doubleValue();
+            }
+            for (int k = 0; k < rows; k++) {
+                if (k != i) {
+                    Number factor = extendedMatrix[k][i];
+                    for (int j = 0; j < cols * 2; j++) {
+                        extendedMatrix[k][j] = extendedMatrix[k][j].doubleValue() - factor.doubleValue() * extendedMatrix[i][j].doubleValue();
+                    }
+                }
+            }
+        }
+
+        Number[][] inverse = new Number[rows][cols];
+        for (int i = 0; i < rows; i++) {
+            System.arraycopy(extendedMatrix[i], cols, inverse[i], 0, cols);
+        }
+
+        return inverse;
+    }
+
+    public static void printRoundedMatrix(Number[][] matrix) {
+        for (Number[] row : matrix) {
+            for (Number element : row) {
+                System.out.printf("%.2f ", element.doubleValue());
+            }
+            System.out.println();
+        }
+    }
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
         int choice;
         do {
-            System.out.println("1. Add matrices\n2. Multiply matrix by a constant\n3. Multiply matrices\n4. Transpose matrix\n5. Calculate a determinant\n0. Exit");
+            System.out.println("1. Add matrices\n2. Multiply matrix by a constant\n3. Multiply matrices\n4. Transpose matrix\n5. Calculate a determinant\n6. Inverse matrix\n0. Exit");
             System.out.print("Your choice: > ");
             choice = scanner.nextInt();
 
@@ -226,6 +317,16 @@ public class MatrixProcessing {
                     System.out.println("The result is:");
                     System.out.println(determinant);
                     break;
+
+                case 6:
+                    Number[][] matrixForInverse = readMatrix("");
+                    Number[][] inverse = inverseMatrix(matrixForInverse);
+                    if (inverse != null) {
+                        System.out.println("The result is:");
+                        printRoundedMatrix(inverse);
+                    }
+                    break;
+
 
 
             }
